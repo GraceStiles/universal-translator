@@ -1,6 +1,6 @@
 
 # Socket.IO Chat
-
+This needs some info
 A simple chat demo for socket.io
 
 ## How to use
