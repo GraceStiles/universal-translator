@@ -1,0 +1,76 @@
+What did we do, code wise:
+
+1. Setup a basic node.js chat server (pulled from samples of socket.io)
+2. Create a new empty repo for the project
+3. Copied the sample code to the fresh repo
+4. Changed the node package.json file to include the lib socket.io as an dependencies
+5. created a .gitignore
+6. git added everything
+  git add *
+  git add .gitignore
+  git commit -m "Initial commit"
+  git push
+  
+  
+
+To run the server: (assumes you have nodejs installed (via homebrew on OSX, google. and; brew install node)
+1. cd into the repo root 
+  cd ~/src/universal-translator
+2. install the needed packages
+  npm install
+3. run the server
+  npm server
+  
+To know the ip address of your server
+ifconfig | grep inet
+look for eth0 and some ip address like (10.x.x.x)
+
+Connect via brower at:
+http://10.200.0.118:3000
+
+
+The project is in 3 parts:
+1. UI of the index.html/style.css pages
+2. Service side node.js (index.js)
+3. The JS on the client side (main.js)
+
+For the server side:
+A. The client will always 'post/emit' on 'new messages'
+   The code will call the method
+   socket.on('new message', function (data) {...}
+   This is where you will add most of your code
+B. Currently, it takes in the a variable called data, which is a String
+   This 'data' var needs to be changed to be a hash (JSON)
+   ex: {username:'xyz', lang:'english', message:'this is the text'}
+c. Currently, it broadcasts the message (will be data.message)
+   ex: socket.broadcast.emit('new message', {
+   
+   This will need to change to:
+   1. take the data.lang as the src lang for the google translate
+   for each lang you surport (lets say english, spanish, french)
+     a. call google translate api for 'data.message', with the src being data.lang and the target being the current lang
+     b. once you get the response for that lang, set it in the data json hash you will emit
+   socket('new message').broadcast.emit(data), to sent the json hash to the clients (browsers)
+     
+The client side:
+A. need to pass the a JSON, not string
+   current: socket.emit('new message', message);    
+   future:  socket.emit('new message', {message: message, lang:'english', username:'Bob'});  
+
+B. Need to 'listen' on the lang of the user
+   'new message ' + lang
+   That will get the translated version of the message.
+   
+
+
+
+Steps:
+1. Change the client/server code to pass in the message hash (message, lang, username), not just message
+
+2. Don't do the translation yet, but do message + ":" + client_lang
+ex:
+"test" => "test:english" on the 'new message english' channel
+"test" => "test:spanish" on the 'new message spanish' channel
+"test" => "test:french" on the 'new message french' channel
+
+3. Get the google translation api to work
