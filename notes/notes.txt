@@ -22,6 +22,8 @@ To run the server: (assumes you have nodejs installed (via homebrew on OSX, goog
   npm server
   
 To know the ip address of your server
+check your wifi/advance settings
+-or-
 ifconfig | grep inet
 look for eth0 and some ip address like (10.x.x.x)
 
@@ -58,10 +60,9 @@ A. need to pass the a JSON, not string
    future:  socket.emit('new message', {message: message, lang:'english', username:'Bob'});  
 
 B. Need to 'listen' on the lang of the user
-   'new message ' + lang
-   That will get the translated version of the message.
+   the 'new message' will return a hash of all the translations
+   you need to pick the correct one, set it to data.message,  and all the addChatMessage(data)
    
-
 
 
 Steps:
