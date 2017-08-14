@@ -1,3 +1,5 @@
+
+
 $(function() {
   var FADE_TIME = 150; // ms
   var TYPING_TIMER_LENGTH = 400; // ms
@@ -6,6 +8,19 @@ $(function() {
     '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
     '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
   ];
+
+  //Hash table for the langauge-id thing
+// var hashTable = new Object(); // or just {}
+// hashTable['english'] = 1;
+// hashTable['spanish'] = 2;
+//
+// // show the values stored
+// for (var k in hashTable) {
+//     // use hasOwnProperty to filter out keys from the Object.prototype
+//     if (hashTable.hasOwnProperty(k)) {
+//         alert('key is: ' + k + ', value is: ' + hashTable[k]);
+//     }
+// }
 
   // Initialize variables
   var $window = $(window);
@@ -56,12 +71,14 @@ $(function() {
     var message = $inputMessage.val();
     // Prevent markup from being injected into the message
     message = cleanInput(message);
+    message = message + lang;
     // if there is a non-empty message and a socket connection
     if (message && connected) {
       $inputMessage.val('');
       addChatMessage({
         username: username,
         message: message
+        //todo: lanugage: language
       });
       // tell server to execute 'new message' and send along one parameter
       socket.emit('new message', message);
@@ -94,6 +111,7 @@ $(function() {
     var $messageDiv = $('<li class="message"/>')
       .data('username', data.username)
       .addClass(typingClass)
+      //somewhere in here potentially add language
       .append($usernameDiv, $messageBodyDiv);
 
     addMessageElement($messageDiv, options);
