@@ -21,12 +21,18 @@ io.on('connection', function (socket) {
   var addedUser = false;
 
   // when the client emits 'new message', this listens and executes
+  // TODO: Next step: Add the senders 'lang' to the message that is returned to the clients.
+  // TODO: ex: "hello" turns into "hello:en"
+  // TODO: Only have to modify line 33 to do. Once you have that working, check it in and remove these comments.
+  // TODO: This is a temp step to prove to yourself that the data is being flowed into the server and back out
+  //
+  // TODO: The folling step will be return an additional key:value to the emit that contains fake translations for each lang you support as an hash
+  // TODO: But don't worry about that yet. Once you get that far, we change the main.js to read that instead. Getting closer
   socket.on('new message', function (data) {
     // we tell the client to execute 'new message'
     socket.broadcast.emit('new message', {
       username: socket.username,
       message: data.message
-
     });
   });
 
