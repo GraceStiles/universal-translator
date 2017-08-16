@@ -31,6 +31,8 @@ $(function() {
   var $loginPage = $('.login.page'); // The login page
   var $chatPage = $('.chat.page'); // The chatroom page
 
+//lang deff//
+  var lang = " ";
   // Prompt for setting a username
   var username;
   var connected = false;
@@ -49,7 +51,12 @@ $(function() {
     }
     log(message);
   }
-
+$
+('#lang_selector').change(setLang);
+  function setLang(){
+   lang = document.getElementById('lang_selector').value;
+   alert(lang);
+ }
   // Sets the client's username
   function setUsername () {
     username = cleanInput($usernameInput.val().trim());
@@ -63,15 +70,15 @@ $(function() {
 
       // Tell the server your username
       socket.emit('add user', username);
+
     }
   }
-
   // Sends a chat message
   function sendMessage () {
     var message = $inputMessage.val();
     // Prevent markup from being injected into the message
     message = cleanInput(message);
-    message = message + lang;
+    message = lang    + message;
     // if there is a non-empty message and a socket connection
     if (message && connected) {
       $inputMessage.val('');
@@ -247,7 +254,7 @@ $(function() {
   socket.on('login', function (data) {
     connected = true;
     // Display the welcome message
-    var message = "Welcome to Socket.IO Chat – ";
+    var message = "Welcome to Girls Who Code Chat – ";
     log(message, {
       prepend: true
     });
