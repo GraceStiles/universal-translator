@@ -30,9 +30,16 @@ io.on('connection', function (socket) {
   // TODO: But don't worry about that yet. Once you get that far, we change the main.js to read that instead. Getting closer
   socket.on('new message', function (data) {
     // we tell the client to execute 'new message'
+    var return_message;
+    if( typeof data == 'string'){
+      return_message = data;
+    } else {
+      return_message = data.message;
+    }
+    
     socket.broadcast.emit('new message', {
       username: socket.username,
-      message: data.message
+      message: return_message
     });
   });
 
