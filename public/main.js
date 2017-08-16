@@ -77,33 +77,35 @@ $
     var message = $inputMessage.val();
     // Prevent markup from being injected into the message
     message = cleanInput(message);
-    if (message && connected) {
-$inputMessage.val('');
-var message_hash = {
-message: message,
+  if (message && connected) {
+    $inputMessage.val('');
+  var message_hash = {
+    message: message,
 // the users message
-language: lang,
+    language: lang,
 // the lang is the var you have the users' language set
-username: username
+    username: username
 }
-addChatMessage(message_hash);
+    addChatMessage(message_hash);
 // tell server to execute 'new message' and send along one parameter
-socket.emit('new message', message_hash);
+      socket.emit('new message', message_hash);
 }
 
 
     // if there is a non-empty message and a socket connection
     if (message && connected) {
       $inputMessage.val('');
-      addChatMessage({
-        username: username,
-        message: message
-        //todo: lanugage: language
-      });
-      // tell server to execute 'new message' and send along one parameter
-      socket.emit('new message', message);
-    }
-  }
+      var message_hash = {
+          message: message, // the users message
+          language: lang, // the lang is the var you have the users' language set
+          username: username
+}
+  addChatMessage(message_hash);
+// tell server to execute 'new message' and send along one parameter
+  socket.emit('new message', message_hash);
+}
+}
+
 
   // Log a message
   function log (message, options) {
