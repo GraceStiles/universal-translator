@@ -32,7 +32,7 @@ $(function() {
   var $chatPage = $('.chat.page'); // The chatroom page
 
 //lang deff//
-  var lang = " ";
+  var lang = "en";
   // Prompt for setting a username
   var username;
   var connected = false;
@@ -55,7 +55,6 @@ $
 ('#lang_selector').change(setLang);
   function setLang(){
    lang = document.getElementById('lang_selector').value;
-   alert(lang);
  }
   // Sets the client's username
   function setUsername () {
@@ -78,7 +77,21 @@ $
     var message = $inputMessage.val();
     // Prevent markup from being injected into the message
     message = cleanInput(message);
-    message = lang    + message;
+    if (message && connected) {
+$inputMessage.val('');
+var message_hash = {
+message: message,
+// the users message
+language: lang,
+// the lang is the var you have the users' language set
+username: username
+}
+addChatMessage(message_hash);
+// tell server to execute 'new message' and send along one parameter
+socket.emit('new message', message_hash);
+}
+
+
     // if there is a non-empty message and a socket connection
     if (message && connected) {
       $inputMessage.val('');
