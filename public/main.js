@@ -235,9 +235,9 @@ $
     }
   });
 
-  $inputMessage.on('input', function() {
-    updateTyping();
-  });
+//  $inputMessage.on('input', function() {
+//    updateTyping();
+//  });
 
   // Click events
 
