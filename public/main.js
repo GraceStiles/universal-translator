@@ -235,16 +235,11 @@ $
     }
   });
 
-//  $inputMessage.on('input', function() {
-//    updateTyping();
-//  });
+  $inputMessage.on('input', function() {
+   updateTyping();
+  });
 
   // Click events
-
-  // Focus input when clicking anywhere on login page
-  $loginPage.click(function () {
-    $currentInput.focus();
-  });
 
   // Focus input when clicking on the message input's border
   $inputMessage.click(function () {
@@ -266,6 +261,7 @@ $
 
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
+    data.message = data.message_translations[lang];
     addChatMessage(data);
   });
 

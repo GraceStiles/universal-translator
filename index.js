@@ -6,6 +6,8 @@ var io = require('socket.io')(server);
 //var io = require('../..')(server);
 var port = process.env.PORT || 3000;
 
+const translate = require('google-translate-api');
+
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
 });
@@ -21,25 +23,50 @@ io.on('connection', function (socket) {
   var addedUser = false;
 
   // when the client emits 'new message', this listens and executes
-  // TODO: Next step: Add the senders 'lang' to the message that is returned to the clients.
-  // TODO: ex: "hello" turns into "hello:en"
-  // TODO: Only have to modify line 37 to do. Once you have that working, check it in and remove these comments.
-  // TODO: This is a temp step to prove to yourself that the data is being flowed into the server and back out
   //
   // TODO: The folling step will be return an additional key:value to the emit that contains fake translations for each lang you support as an hash
   // TODO: But don't worry about that yet. Once you get that far, we change the main.js to read that instead. Getting closer
   socket.on('new message', function (data) {
-    // we tell the client to execute 'new message'
-    var return_message;
+    var to_lang_array = ['es', 'en', 'fr', 'de'];
+    var senders_message;
+    var senders_lang;
+
+    // check to see if the data is a hash or just a String. In case the client hasn't updated yet.
     if( typeof data == 'string'){
-      return_message = data;
+      senders_message = data;
+      senders_lang = 'en';
     } else {
-      return_message = data.message + data.language;
+      senders_message = data.message;
+      senders_lang = data.language;
     }
 
-    socket.broadcast.emit('new message', {
-      username: socket.username,
-      message: return_message
+    // now we need to have google translate for each lang we care about (hardcoded list for now)
+    // result_hash will contain {'en':"English version of the message" , 'es':"Spanish version of the message", ...}
+    var result_hash = {};
+    var promise_array = [to_lang_array.length];
+
+    // this creating a async promise for each to_lang to all google translate and
+    // Once the promise is done, it updates the result_hash key of lang, value of translation
+    for (var i = 0; i < to_lang_array.length; ++i) {
+      promise_array[i] = translate_aux(senders_message, senders_lang, to_lang_array[i], result_hash);
+    }
+
+    // Now, we wait till all Promises are done and then emit to the socket
+    // Promise.all forces it to wait for all api's to finish
+    Promise.all(promise_array).then(results=>{
+      // all debugging code on the console of the server
+      console.log('all the translations are complete');
+      Object.keys(result_hash).forEach(function (key) {
+        console.log("["+key+"] = " + result_hash[key]);
+      });
+
+      // Now, send the message back to the client(s)
+      socket.broadcast.emit('new message', {
+        username: socket.username,         // used to know who said it!
+        message_translations: result_hash, // contains key:value pairs of lang:message
+        message: senders_message,          // this is the what the sender sent, for debugging. Also also older clients to still use
+        original_lang: senders_lang        // this is the senders lang
+      });
     });
   });
 
@@ -87,4 +114,16 @@ io.on('connection', function (socket) {
       });
     }
   });
+
+  // helper methods for the translation
+  // this is needed to keep track of the src_lang, since the returning object from the translate call doesn't have it!
+  // This is thing wrapper to hold the state in the callback
+  function translate_aux(src_text, from_lang, to_lang, result_hash){
+      return translate(src_text, {
+        from: from_lang,
+        to: to_lang}
+      ).then(res=>
+        {result_hash[to_lang]=res.text;}
+      );
+  }
 });

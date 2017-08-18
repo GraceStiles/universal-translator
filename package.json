@@ -1,14 +1,15 @@
 {
   "name": "socket.io-chat",
   "version": "0.0.0",
-  "description": "A simple chat client using socket.io",
+  "description": "A chat client for girl who code",
   "main": "index.js",
-  "author": "Grant Timmerman",
+  "author": "Grace Stiles, Teri, Mercedes",
   "private": true,
   "license": "BSD",
   "dependencies": {
     "express": "4.13.4",
-    "socket.io": "2.0.3"
+    "socket.io": "2.0.3",
+    "google-translate-api": "2.3.0"
   },
   "scripts": {
     "start": "node index.js"
