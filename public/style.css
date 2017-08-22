@@ -73,7 +73,11 @@ ul {
 }
 
 .login.page .title {
-  font-size: 200%;
+  font-size: 220%;
+}
+
+.login.page .sub_title {
+  font-size: 150%;
 }
 
 .login.page .usernameInput {
@@ -81,7 +85,7 @@ ul {
   letter-spacing: 3px;
 }
 
-.login.page .title, .login.page .usernameInput {
+.login.page .title, .login.page .usernameInput, .login.page .sub_title {
   color: #fff;
   font-weight: 100;
 }
