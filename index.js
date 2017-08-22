@@ -27,7 +27,7 @@ io.on('connection', function (socket) {
   // TODO: The folling step will be return an additional key:value to the emit that contains fake translations for each lang you support as an hash
   // TODO: But don't worry about that yet. Once you get that far, we change the main.js to read that instead. Getting closer
   socket.on('new message', function (data) {
-    var to_lang_array = ['es', 'en', 'fr', 'de'];
+    var to_lang_array = ['es', 'en', 'fr', 'de', 'ja'];
     var senders_message;
     var senders_lang;
 
